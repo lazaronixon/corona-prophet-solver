@@ -1,0 +1,7 @@
+[packages]
+flask = "*"
+pandas = "*"
+fbprophet = "*"
+
+[requires]
+python_version = "3.7"
