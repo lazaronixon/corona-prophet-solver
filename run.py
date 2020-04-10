@@ -26,7 +26,7 @@ def confirmed():
         x = np.array(dataset['ts']) + 1
         y = np.array(dataset['y'])
 
-        (a,b,c),cov = optim.curve_fit(func_logistic, x, y, bounds=bounds, p0=p0, maxfev=1000000000)
+        (a,b,c),cov = optim.curve_fit(func_logistic, x, y, bounds=bounds, p0=p0, maxfev=1000000)
 
         # The time step at which the growth is fastest
         t_fastest = np.log(a) / b
@@ -61,17 +61,27 @@ def confirmed():
 ##########################LOGISTIC FORECAST FOR CONFIRMED#####################################
 @app.route('/deaths', methods=['POST'])
 def deaths():
+    def calculate_diff():
+        dataset.loc[1:, 'y'] = dataset['y'].diff()[1:]
+
+    def calculate_cumsum():
+        forecast['yhat'] = forecast['yhat'].cumsum()
+        forecast['yhat_lower'] = forecast['yhat_lower'].cumsum()
+        forecast['yhat_upper'] = forecast['yhat_upper'].cumsum()
+
     periods = int(request.headers['periods'])
     body    = request.get_json()
 
     dataset = pd.DataFrame(body)
+    calculate_diff()
 
-    m = Prophet(changepoint_prior_scale=0.1, changepoint_range=1, seasonality_mode='multiplicative', yearly_seasonality=False, weekly_seasonality=False, daily_seasonality=False)
+    m = Prophet()
     m.fit(dataset)
 
     future = m.make_future_dataframe(periods=periods)
 
     forecast = m.predict(future)
+    calculate_cumsum()
 
     response = forecast[['ds', 'yhat']].tail(periods)
 
