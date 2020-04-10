@@ -3,6 +3,7 @@ flask = "*"
 pandas = "*"
 fbprophet = "*"
 scipy = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.7"
