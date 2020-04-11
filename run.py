@@ -20,7 +20,7 @@ def confirmed():
         p0 = np.random.exponential(size=3)
 
         # Set min bound 0 on all coefficients, and set different max bounds for each coefficient
-        bounds = (0, [100000., 1000., 1000000.])
+        bounds = (0, [1000., 5., 100000.])
 
         # Convert pd.Series to np.Array and use Scipy's curve fit to find the best Nonlinear Least Squares coefficients
         x = np.array(dataset['ts']) + 1
