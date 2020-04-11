@@ -75,7 +75,7 @@ def deaths():
     dataset = pd.DataFrame(body)
     calculate_diff()
 
-    m = Prophet()
+    m = Prophet(changepoint_prior_scale=0.1)
     m.fit(dataset)
 
     future = m.make_future_dataframe(periods=periods)
