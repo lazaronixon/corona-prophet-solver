@@ -46,7 +46,7 @@ def confirmed():
 
     set_capacity()
 
-    m = Prophet(growth='logistic')
+    m = Prophet(growth='logistic', changepoint_prior_scale=1, changepoint_range=1)
     m.fit(dataset)
 
     future = m.make_future_dataframe(periods=periods)
